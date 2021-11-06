@@ -4,7 +4,7 @@
 # date: "09/09/21"
 #____________________________________________________
 
-
+#Prueba para hacer algunos cambios en git
 # DOWNLOAD AND/OR OPEN LIBRARIES ------------------------------------------
 
 #Libraries needded:
@@ -201,7 +201,7 @@ dbvarnum <- dbcovid %>%
                names_sep = '_',
                names_to = c('Variable', '.value')) %>%
   left_join(dftes2, by = 'Variable')%>%
-  unite(meansd, c(prom, desvest), sep = ' ± ') %>%
+  unite(meansd, c(prom, desvest), sep = ' ? ') %>%
   select(Variable, validos, motivoegre, meansd, p  )%>%
   mutate(Variable = factor(Variable, labels = dbtranslator$eng)) %>%
   arrange(p, Variable)
@@ -499,9 +499,9 @@ dfvarimp <- bind_cols(varimpglm[1:20,], varimpknn[1:20,], varimprpart[1:20,], va
 # EMPLEO DE MENOS VARIABLES USANDO RESULTADOS ANTERIORES ------------------
 
 #FECHA: 14/09/2021
-#Primero usaré la base imputada con la mediana, la guardo en una variable
+#Primero usar? la base imputada con la mediana, la guardo en una variable
 #Luego, selecciono solo las variables con la mayor importancia, y que se consideren
-#clínicament relevantes, a esta base la llamaré dbcovidmd10
+#cl?nicament relevantes, a esta base la llamar? dbcovidmd10
 dbcovidmd10 <- dbcovidmd %>%
   select(c(motivoegre, sato2sin, neutros, pao2, paco2, dhl, dimd, urea, linfos, edad))
 
@@ -585,13 +585,13 @@ acc_rfmd10 <- cm$overall[["Accuracy"]]
 acc_rfmd10up <- cm$overall[["AccuracyUpper"]]
 acc_rfmd10lo <-  cm$overall[["AccuracyLower"]]
 
-#CONCLUSIÓN: LA COSA SALIÓ MUY MAL, DISMINUYE LA EFICIENCIA DE TODOS LOS MODELOS.
+#CONCLUSI?N: LA COSA SALI? MUY MAL, DISMINUYE LA EFICIENCIA DE TODOS LOS MODELOS.
 
 
 
 # MODELO CON ENSAMBLE -----------------------------------------------------
 
-#guardamos variables para no correr innecesariamente código:
+#guardamos variables para no correr innecesariamente c?digo:
 save(list = c('dbcovidbag', 'test_setbag','fit_glmbag', 'fit_knnbag',
               'fit_rfbag', 'fit_rpartbag' ),
      file = 'Rdata/modelofinbag.Rda')
@@ -631,7 +631,7 @@ cm_ensamble
 names(dbcovidmd)
 names(test_setmd)
 
-#Voto por mayoría?
+#Voto por mayor?a?
 yhat_rfmed <- predict(fit_rfmd, test_setmd, type = 'raw')
 head(yhat_rfmed)
 yhat_knn <- predict(fit_knnmd, test_setmd, type = 'raw')
@@ -695,7 +695,7 @@ table(dbcovidval$motivoegre)
 table(dbcovidval$has)
 table(dbcovidval$sexo)
 
-#Arreglamos dicotómicas
+#Arreglamos dicot?micas
 dicot <- c('motivoegre','has', 'tabaquismo', 'dm', 
            'ing_disnea')
 dbcovidval <- dbcovidval %>%
@@ -703,7 +703,7 @@ dbcovidval <- dbcovidval %>%
 #Arreglamos sexo
 dbcovidval <- dbcovidval %>%
   mutate(sexo = factor(sexo,levels = c('F', 'M'), labels = c('Female', 'Male')))
-#Arreglamos escolaridad y ocupación
+#Arreglamos escolaridad y ocupaci?n
 table(dbcovidval$escolaridad)
 dbcovidval <- dbcovidval %>%
   mutate(across(all_of(c('escolaridad', 'ocupacion')), as.factor))
@@ -724,9 +724,9 @@ table(dbcovidval$colesterol)
 save(dbcovidval, file = 'Rdata/dbcovidval.Rda')
 
 p_rf <- predict(fit_rfmd, dbcovidval)
-#El colesterol de capturó como ordinal, no se pusieron los valores brutos.
+#El colesterol de captur? como ordinal, no se pusieron los valores brutos.
 
-# 26/09/21 se quitará colesterol de dbcovingmd ----------------------------
+# 26/09/21 se quitar? colesterol de dbcovingmd ----------------------------
 
 library(tidyverse)
 library((lubridate))
@@ -734,7 +734,7 @@ load('Rdata/dbcovidmd.Rda')
 load('Rdata/modelofinmd.Rda')
 
 # Veo el comportamiento de dbcovidmd, checo que salga el mismo resultado
-#solo emplearé el modelo de random forests.
+#solo emplear? el modelo de random forests.
 
 model_rf <- predict(fit_rfmd, newdata = test_setmd)
 cm <- confusionMatrix(data = model_rf, reference = test_setmd$motivoegre)
@@ -764,16 +764,16 @@ fit_rfnocol <- train(motivoegre ~ .,
 
 model_rfnocol <- predict(fit_rfnocol, newdata = test_setnocol)
 cm2 <- confusionMatrix(data = model_rfnocol, reference = test_setnocol$motivoegre)
-cm2 # SE PIERDE UNA DÉCIMA DE ACCURACY.
-#CONCLUSIÓN: HAY QUE PREGUNTAR A ÁLVARO QUE CAMBIEN EL COLESTEROL.
+cm2 # SE PIERDE UNA D?CIMA DE ACCURACY.
+#CONCLUSI?N: HAY QUE PREGUNTAR A ?LVARO QUE CAMBIEN EL COLESTEROL.
 
 
 # MODELO rf CON VARIABLES CON p MENOR A 0.01 ---------------------------------
 
 load('Rdata/dbcovid.Rda')
-#corro parte del código de la sección de preprocesamiento de datos
+#corro parte del c?digo de la secci?n de preprocesamiento de datos
 # para tener varcateg, varnumlistachis, numlistachis
-# repito la parte final del código aquí:
+# repito la parte final del c?digo aqu?:
 varnum <- dbcovid %>%
   select(where(is.numeric)) %>%
   names
@@ -781,7 +781,7 @@ listapesnum <- apply(dbcovid[, varnum[-1]], 2, function(x) t.test(x ~ dbcovid$mo
 umann <- wilcox.test(dbcovid$escolaridad ~ dbcovid$motivoegre)$p.value
 listapesnum <- round(c(umann, listapesnum), 3)
 
-#AQUÍ CAMBIA EL MODELO
+#AQU? CAMBIA EL MODELO
 finalvarcateg <- varcateg[which(numlistachis < 0.01)]
 finalvarnum <- varnum[which(listapesnum < 0.01)]
 finalvarnum <- finalvarnum[1:19] #quitamos dayshosp y duration
@@ -821,7 +821,7 @@ dbcovidbag2 <- dbcovid %>%
 sum(is.na(dbcovidbag2)) # check we have no missing data
 save(dbcovidbag2, file = 'Rdata/dbcovidbag2.Rda')
 
-#MODELO CON IMPUTACIÓN POR MEDIANA
+#MODELO CON IMPUTACI?N POR MEDIANA
 #Particiono la nueva base, usando el misma seed.
 set.seed(271220)
 indtrainmd <- createDataPartition(y = dbcovidmd2$motivoegre, times = 1, p = 0.85, list = FALSE)
@@ -842,9 +842,9 @@ fit_rfmd2 <- train(motivoegre ~ .,
 model_rfmd2 <- predict(fit_rfmd2, newdata = test_setmd2)
 cm3 <- confusionMatrix(data = model_rfmd2, reference = test_setmd2$motivoegre)
 cm3
-#CONCLUSIÓN: MEJORA LA ACCURACY A 0.84 CON ESTE MODELO, EMPLEANDO RANDOM FORESTS
+#CONCLUSI?N: MEJORA LA ACCURACY A 0.84 CON ESTE MODELO, EMPLEANDO RANDOM FORESTS
 
-#MODELO POR IMPUTACIÓN POR BAGGING
+#MODELO POR IMPUTACI?N POR BAGGING
 #Particiono la nueva base, usando el misma seed.
 set.seed(271220)
 indtrainmd <- createDataPartition(y = dbcovidbag2$motivoegre, times = 1, p = 0.85, list = FALSE)
@@ -865,9 +865,9 @@ fit_rfbag2 <- train(motivoegre ~ .,
 model_rfbag2 <- predict(fit_rfbag2, newdata = test_setbag2)
 cm4 <- confusionMatrix(data = model_rfbag2, reference = test_setbag2$motivoegre)
 cm4
-# CONCLUSIÓN: NO USAR BAGGING, LA ACCURACY BAJA A .789, IGUAL QUE EN EL MODELO ANTERIOR.
+# CONCLUSI?N: NO USAR BAGGING, LA ACCURACY BAJA A .789, IGUAL QUE EN EL MODELO ANTERIOR.
 
-#RENDIMIENTO DEL MODELO 2 CON LA BASE DE VALIDACIÓN:
+#RENDIMIENTO DEL MODELO 2 CON LA BASE DE VALIDACI?N:
 
 library(tidyverse)
 library(caret)
@@ -1054,7 +1054,7 @@ fit_glmmd2fin <- train(motivoegre ~ .,
 model_glmmd2fin <- predict(fit_glmmd2fin, newdata = dbcovidval2, type = 'raw')
 cmglmmd2fin <- confusionMatrix(data = model_glmmd2fin, reference = dbcovidval2$motivoegre)
 cmglmmd2fin
-# CONCLUSIÓN: accuracy de 81%, not bad at all
+# CONCLUSI?N: accuracy de 81%, not bad at all
 
 #KNN
 # Entrenamos con toda la base
@@ -1070,7 +1070,7 @@ fit_knnmd2fin$bestTune
 model_knnmd2fin <- predict(fit_knnmd2fin, newdata = dbcovidval2)
 cmknnmd2fin <- confusionMatrix(data = model_knnmd2fin, reference = dbcovidval2$motivoegre)
 cmknnmd2fin
-# CONCLUSIÓN: ACCURACY DE 0.68
+# CONCLUSI?N: ACCURACY DE 0.68
 
 #RPART
 #Usamos toda la base para entrenar
@@ -1104,7 +1104,7 @@ fit_glmmd2fin <- train(motivoegre ~ .,
 model_glmmd2fin <- predict(fit_glmmd2fin, newdata = dbcovidval2, type = 'raw')
 cmglmmd2fin <- confusionMatrix(data = model_glmmd2fin, reference = dbcovidval2$motivoegre)
 cmglmmd2fin
-# CONCLUSIÓN: accuracy de 81%, not bad at all
+# CONCLUSI?N: accuracy de 81%, not bad at all
 
 #KNN
 # Entrenamos con toda la base
@@ -1120,7 +1120,7 @@ fit_knnmd2fin$bestTune
 model_knnmd2fin <- predict(fit_knnmd2fin, newdata = dbcovidval2)
 cmknnmd2fin <- confusionMatrix(data = model_knnmd2fin, reference = dbcovidval2$motivoegre)
 cmknnmd2fin
-# CONCLUSIÓN: ACCURACY DE 0.67
+# CONCLUSI?N: ACCURACY DE 0.67
 
 #RPART
 #Usamos toda la base para entrenar
@@ -1155,7 +1155,7 @@ fit_glmbag2fin <- train(motivoegre ~ .,
 model_glmbag2fin <- predict(fit_glmbag2fin, newdata = dbcovidval2, type = 'raw')
 cmglmbag2fin <- confusionMatrix(data = model_glmbag2fin, reference = dbcovidval2$motivoegre)
 cmglmbag2fin
-# CONCLUSIÓN: accuracy de 81%, not bad at all
+# CONCLUSI?N: accuracy de 81%, not bad at all
 
 #KNN
 # Entrenamos con toda la base
@@ -1171,7 +1171,7 @@ fit_knnbag2fin$bestTune
 model_knnbag2fin <- predict(fit_knnbag2fin, newdata = dbcovidval2)
 cmknnbag2fin <- confusionMatrix(data = model_knnbag2fin, reference = dbcovidval2$motivoegre)
 cmknnbag2fin
-# CONCLUSIÓN: ACCURACY DE 0.68
+# CONCLUSI?N: ACCURACY DE 0.68
 
 #RPART
 #Usamos toda la base para entrenar
@@ -1189,15 +1189,15 @@ text(fit_rpartbag2fin$finalModel, cex = 0.75)
 model_rpartbag2fin <- predict(fit_rpartbag2fin, newdata = dbcovidval2)
 cmrpartbag2fin <- confusionMatrix(data = model_rpartbag2fin, reference = dbcovidval2$motivoegre)
 cmrpartbag2fin
-# CONCLUSIÓN: ACCURACY DE 0.78
+# CONCLUSI?N: ACCURACY DE 0.78
 
 
 
-# GRÁFICA DE CORRELACIÓN --------------------------------------------------
+# GR?FICA DE CORRELACI?N --------------------------------------------------
 
 library(tidyverse)
 load('Rdata/dbcovidmd2.Rda')
-# Se tomó de un video de youtube, se usa el paquete corrplot
+# Se tom? de un video de youtube, se usa el paquete corrplot
 #install.packages('corrplot')
 library(corrplot)
 
